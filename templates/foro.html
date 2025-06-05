@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/foro.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="foro-page container mt-4">
+
+  <div class="foro-titulo-fijo d-flex align-items-center justify-content-between">
+    <h2>{{ foro.titulo_del_foro }}</h2>
+    <button id="btn-add-participant" class="agregar-button">Añadir participante</button>
+  </div>
+  <div class="foro-mensajes">
+    {% for mensaje in mensajes %}
+      <div class="card mb-3">
+        <div class="card-header">
+          <strong>{{ mensaje.usuario.username }}</strong> dijo:
+          <span class="text-muted float-end">{{ mensaje.fecha }}</span>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ mensaje.mensaje }}</p>
+        </div>
+      </div>
+    {% empty %}
+      <p class="no-result-message">No hay mensajes aún.</p>
+    {% endfor %}
+  </div>
+
+  <!-- FORMULARIO DE NUEVO MENSAJE -->
+  <form method="POST" class="foro-chat-bar">
+    {% csrf_token %}
+    {{ form.mensaje }}
+    <button type="submit" class="btn btn-primary">Publicar</button>
+  </form>
+
+
+</main>
+
+
+<!-- Modal para añadir participantes -->
+<div class="modal fade" id="addParticipantModal" tabindex="-1" aria-labelledby="addParticipantModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="addParticipantForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addParticipantModalLabel">Añadir participante</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <select id="participantSelect" name="usuario" style="width: 100%;">
+            <!-- select2 cargará las opciones aquí -->
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Añadir</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+  const foroId = {{ foro.id }};
+  const modal = new bootstrap.Modal(document.getElementById('addParticipantModal'));
+
+  $('#btn-add-participant').click(function() {
+  $('#participantSelect').val(null).trigger('change'); // reset select2
+  modal.show();
+
+  // Inicializa o refresca select2 cuando el modal se muestra
+  setTimeout(() => {
+    $('#participantSelect').select2({
+      placeholder: 'Buscar usuarios',
+      dropdownParent: $('#addParticipantModal'),  
+      ajax: {
+        url: '{% url "buscar_usuarios_para_foro" foro.id %}',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+          return { q: params.term };
+        },
+        processResults: function(data) {
+          return { results: data.results };
+        },
+        cache: true
+      },
+      minimumInputLength: 1,
+    });
+  }, 200);
+});
+
+
+  // Enviar formulario para añadir participante
+  $('#addParticipantForm').submit(function(e) {
+    e.preventDefault();
+    const usuarioId = $('#participantSelect').val();
+    if (!usuarioId) {
+      alert('Por favor, selecciona un usuario.');
+      return;
+    }
+
+    $.ajax({
+      url: '{% url "agregar_participante_foro" foro.id %}', 
+      method: 'POST',
+      data: {
+        'usuario_id': usuarioId,
+        'csrfmiddlewaretoken': '{{ csrf_token }}',
+      },
+      success: function(response) {
+        alert('Participante añadido correctamente.');
+        modal.hide();
+        location.reload();  
+      },
+      error: function(xhr) {
+        alert('Error al añadir participante: ' + xhr.responseJSON.error);
+      }
+    });
+  });
+});
+</script>
+
+
+{% endblock %}

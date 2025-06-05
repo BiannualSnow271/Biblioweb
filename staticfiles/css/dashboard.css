@@ -1,0 +1,194 @@
+
+.dashboard-section {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 50px;
+    gap: 3%;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.dashboard-icon-box {
+    width: 12%;
+    min-width: 90px;
+    aspect-ratio: 1;
+    background-color: var(--secundario);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-icon {
+    font-size: 3.2rem;
+    color: var(--oscuro);
+}
+
+.dashboard-content {
+    flex: 1 1 85%;
+    min-width: 300px;
+}
+
+.dashboard-content h5 {
+    color: var(--oscuro);
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.dashboard-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+
+
+.dashboard-title-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secundario);
+    color: var(--oscuro);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    text-decoration: none;
+}
+
+.icon-button:hover {
+    background-color: var(--terciario);
+}
+
+
+
+
+.dashboard-foros li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--cuaternario);
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-bottom: 15px;
+}
+
+
+
+.dashboard-foros form {
+    margin-left: 20px;
+}
+
+
+
+
+.dashboard-foros {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+
+
+
+
+
+.foro-info {
+    display: inline-flex; /* ❗ clave para que ocupe solo el espacio necesario */
+    align-items: center;
+    gap: 12px;
+    background: none; /* Asegura que no tenga fondo */
+    padding: 0;
+}
+
+.foro-info a {
+    font-size: 1.3rem;
+    color: var(--oscuro);
+    text-decoration: none;
+}
+
+.foro-info form {
+    margin: 0;
+}
+
+
+
+.foro-item {
+    background: none;  /* Quita cualquier fondo */
+    width: auto;       /* Que no ocupe todo el ancho */
+    padding: 0;
+    margin: 0 0 12px 0;
+}
+
+.foro-item a {
+    /* Estilo del enlace */
+    font-size: 1.3rem;
+    color: var(--oscuro);
+    text-decoration: none;
+}
+
+.foro-item form {
+    margin: 0;
+}
+
+.salir-button {
+    padding: 6px 14px; /* Más compacto */
+    font-size: 1rem;
+    border-radius: 8px;
+    background-color: var(--secundario);
+    border: none;
+    cursor: pointer;
+    color: var(--oscuro);
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.salir-button:hover {
+    background-color: var(--terciario);
+}
+
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 20px;
+        height: auto;
+    }
+
+    header img {
+        height: 60px;
+    }
+
+    .dashboard-section {
+        flex-direction: column;
+    }
+
+    .dashboard-icon-box {
+        width: 80px;
+    }
+
+    .dashboard-content h5 {
+        font-size: 1.6rem;
+    }
+
+    button, a.button {
+        font-size: 1.2rem;
+        padding: 14px 24px;
+    }
+
+    .icon-button {
+        width: 48px;
+        height: 48px;
+        font-size: 1.6rem;
+    }
+}

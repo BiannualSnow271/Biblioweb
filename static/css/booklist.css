@@ -1,0 +1,211 @@
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* Tarjeta individual */
+.book-card {
+    background-color: var(--cuaternario);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.book-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Título arriba */
+.book-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--oscuro);
+}
+
+/* Imagen al centro */
+.book-image-container {
+    width: 100%;
+    aspect-ratio: 3 / 4; /* Controla proporción vertical */
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.book-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+}
+
+/* Botones en hover */
+.book-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.3s ease;
+}
+
+.book-image-container:hover .book-hover {
+    opacity: 1;
+}
+
+.book-hover button {
+    background-color: var(--secundario);
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    color: var(--oscuro);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.book-hover a {
+    background-color: var(--secundario);
+    border: none;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    color: var(--oscuro);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.book-hover button:hover {
+    background-color: var(--terciario);
+}
+
+/* Valoración abajo */
+.rating-display {
+    font-size: 1rem;
+    color: gold;
+    margin-top: auto;
+}
+
+.lista-control-container {
+    width: 120px; /* o ajusta al ancho que quieres para que coincida con “Detalles” */
+    height: 32px; /* altura típica de btn-sm */
+}
+
+/* El badge visible, botón oculto */
+.badge-lista {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* Botón oculto por defecto */
+.cambiar-lista-btn {
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.2s ease;
+}
+
+/* Al hacer hover sobre el contenedor: mostrar botón y ocultar badge */
+.lista-control-container:hover .cambiar-lista-btn {
+    opacity: 1;
+}
+
+.lista-control-container:hover .badge-lista {
+    opacity: 0;
+}
+
+
+/* Responsivo */
+@media (max-width: 992px) {
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .book-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.no-result-message {
+    color: var(--oscuro);  
+    font-size: 1.5rem;  
+    text-align: center;  
+    margin-top: 20px;    
+}
+
+.book-hover .btn-primary.btn-sm,
+.book-hover .badge-lista.btn-sm {
+  width: 120px; /* ajusta este ancho a lo que mejor te quede */
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;      /* evitar que el texto haga salto de línea */
+  overflow: hidden;
+  text-overflow: ellipsis;  /* corta texto largo con puntos suspensivos */
+}
+
+
+.icono-estrella {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    color: gold; /* por defecto */
+}
+
+.estrella-vacia {
+    color: lightgray;
+}
+
+.estrella-rellena {
+    color: gold;
+}
+
+
+.estrella-svg {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 2px;
+}
+
+.estrella-svg svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.estrella-fondo {
+    color: #ccc;
+}
+
+.estrella-relleno {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    height: 100%;
+    color: gold;
+}
+
+
+

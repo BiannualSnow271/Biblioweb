@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+{% load custom_tags %}
+{% load render_estrellas %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/booklist.css' %}">
+{% endblock %}
+
+
+
+{% block content %}
+
+<svg style="display: none;">
+  <symbol id="icono-estrella" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M12 17.27L18.18 21L16.54 13.97L22 9.24
+             L14.81 8.63L12 2L9.19 8.63L2 9.24
+             L7.45 13.97L5.82 21z"/>
+  </symbol>
+</svg>
+
+<!-- Modal para seleccionar lista -->
+<div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addBookModalLabel">Agregar libro a lista</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿A qué lista deseas agregar <strong id="book-title-placeholder"></strong>?</p>
+        <div class="d-flex justify-content-around">
+          <button class="btn btn-primary" onclick="agregarALaLista('leidos')">Leídos</button>
+          <button class="btn btn-secondary" onclick="agregarALaLista('por_leer')">Por leer</button>
+        </div>
+        <input type="hidden" id="selected-book-id">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<main class="container mt-5">
+    <h2 class="foro-titulo">{{titulo}}</h2>
+
+    {% if books %}
+    <div class="book-grid">
+        {% for book in books %}
+        <div class="book-card">
+            <h3 class="book-title">{{ book.titulo_del_libro }}</h3>
+
+            <div class="book-image-container">
+                <img src="{{ book.foto_perfil.url }}" alt="{{ book.titulo_del_libro }}">
+                <div class="book-hover">
+                    <a href="{% url 'detalle_libro' book.id %}" class="btn btn-primary btn-sm">📖 Detalles</a>
+
+                    {% if book in leidos %}
+                    <div class="lista-control-container position-relative d-inline-block mt-2">
+                        <span class="badge-lista btn btn-success btn-sm position-absolute top-0 start-0 w-100 text-center">
+                            Ya leído
+                        </span>
+                        <button class="cambiar-lista-btn btn btn-sm position-absolute top-0 start-0 w-100" 
+                            onclick="agregarALaLista('por_leer', {{ book.id }})" type="button">
+                            Cambiar a “Por leer”
+                        </button>
+                    </div>
+                    {% elif book in por_leer %}
+                    <div class="lista-control-container position-relative d-inline-block mt-2">
+                        <span class="badge-lista btn btn-warning btn-sm position-absolute top-0 start-0 w-100 text-center">
+                            Por leer
+                        </span>
+                        <button class="cambiar-lista-btn btn btn-sm position-absolute top-0 start-0 w-100" 
+                            onclick="agregarALaLista('por_leer', {{ book.id }})" type="button">
+                            Cambiar a “Leído”
+                        </button>
+                    </div>
+                    {% elif user.is_authenticated %}
+                    <!--<button class="btn btn-outline-secondary btn-sm mt-2" 
+                        onclick="mostrarModalAgregar({{ book.id }}, '{{ book.titulo_del_libro|escapejs }}')" type="button">
+                        ➕ Agregar
+                    </button>-->
+                    <div class="lista-control-container position-relative d-inline-block mt-2">
+                        <button class="btn btn-success btn-sm position-absolute top-0 start-0 w-100 text-center" 
+                            onclick="mostrarModalAgregar({{ book.id }}, '{{ book.titulo_del_libro|escapejs }}')" type="button">
+                            ➕ Agregar
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+            <div class="rating-display valoracion-media estrellas-valoracion" data-book-id="{{ book.id }}">
+                {% render_estrellas promedios_estrellas|get_item:book.id book.id %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="text-center mt-4 no-result-message">No se encontraron libros cuyo titulo coincida con "{{ query }}".</p>
+    {% endif %}
+</main>
+
+<script>
+function mostrarModalAgregar(bookId, bookTitle) {
+    document.getElementById('selected-book-id').value = bookId;
+    document.getElementById('book-title-placeholder').innerText = bookTitle;
+    const modal = new bootstrap.Modal(document.getElementById('addBookModal'));
+    modal.show();
+}
+
+function agregarALaLista(lista, bookId = null) {
+    if (!bookId) {
+        bookId = document.getElementById('selected-book-id').value;
+    }
+    fetch("{% url 'agregar_a_lista' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: JSON.stringify({
+            book_id: bookId,
+            lista: lista
+        })
+    }).then(response => {
+        console.log(response)
+        if (response.ok) {
+            // Actualizar sin recargar, si quieres hacerlo dinámico más adelante
+            location.reload();
+        } else {
+            alert("Error al agregar el libro.");
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addBookModal'));
+        if (modal) modal.hide();
+    }).catch(error => {
+        console.error("Error en la solicitud:", error);
+        alert("Error al procesar la solicitud.");
+    });
+}
+</script>
+{% endblock %}
+
+

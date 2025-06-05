@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block body_class %}fondo-dashboard{% endblock %}
+
+{% block content %}
+<main>
+  <div class="dashboard-container">
+
+    <!-- SUBIR UN LIBRO -->
+    <div class="dashboard-section">
+      <div class="dashboard-icon-box">
+        <i class="fas fa-upload dashboard-icon"></i>
+      </div>
+      <div class="dashboard-content">
+        <h5>Subir un libro</h5>
+        <a href="{% url 'crear_libro' %}" class="button">Subir</a>
+      </div>
+    </div>
+
+    <!-- MIS LIBROS -->
+    <div class="dashboard-section">
+      <div class="dashboard-icon-box">
+        <i class="fas fa-book dashboard-icon"></i>
+      </div>
+      <div class="dashboard-content">
+        <h5>Mis libros</h5>
+        <div class="dashboard-buttons">
+          <a href="{% url 'libros_por_leer' %}" class="button">Por leer</a>
+          <a href="{% url 'libros_leidos' %}" class="button">Leídos</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIS FOROS -->
+    <div class="dashboard-section">
+      <div class="dashboard-icon-box">
+        <i class="fas fa-comment-alt dashboard-icon"></i>
+      </div>
+      <div class="dashboard-content">
+        <div class="dashboard-title-row">
+          <h5>Mis foros</h5>
+          <a href="{% url 'crear_foro' %}" class="icon-button" title="Crear foro">
+            <i class="fas fa-plus"></i>
+          </a>
+        </div>
+          <ul class="dashboard-foros">
+          {% for foro in foros_usuario %}
+            <li class="foro-item" style="display: inline-flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <a href="{% url 'foro' id=foro.id %}" style="font-size: 1.3rem; color: var(--oscuro); text-decoration: none;">
+                {{ foro.titulo_del_foro }}
+              </a>
+              <form action="{% url 'salir_foro' foro.id %}" method="post" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="salir-button">Salir</button>
+              </form>
+            </li>
+          {% empty %}
+            <p class="mt-4 no-result-message">No estás en ningún foro aún.</p>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</main>
+{% endblock %}

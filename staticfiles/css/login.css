@@ -1,0 +1,91 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+    padding: 20px;
+    background-color: var(--cuaternario);
+}
+
+.login-card {
+    background-color: white;
+    padding: 3rem 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 520px;
+}
+
+/* Pestañas de login / registro */
+.login-tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+}
+
+.tab {
+    flex: 1;
+    padding: 0.8rem;
+    background-color: var(--secundario);
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 0.6rem;
+    margin: 0 0.3rem;
+    color: var(--oscuro);
+    font-size: 1.1rem;
+    transition: background-color 0.3s;
+}
+
+.tab.active {
+    background-color: var(--primario);
+    color: var(--oscuro);
+}
+
+.login-form input {
+    width: 100%;
+    margin-bottom: 1.2rem;
+    padding: 0.9rem 1rem;
+    border-radius: 0.6rem;
+    border: 1px solid #ccc;
+    background-color: var(--oscuro_input);
+    color: white;
+    font-size: 1.1rem;
+}
+
+.login-form input::placeholder {
+    color: #ddd;
+}
+
+.login-form .btn {
+    background-color: var(--primario);
+    color: var(--oscuro);
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.9rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.login-form .btn:hover {
+    background-color: var(--secundario);
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .login-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .tab {
+        font-size: 1rem;
+        padding: 0.6rem;
+    }
+}

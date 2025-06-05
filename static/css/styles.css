@@ -1,0 +1,128 @@
+
+/* ===== Estilos Generales ===== */
+
+:root {
+    --primario: #FCC891;
+    --secundario: #FAE6BB;
+    --terciario: #F3F6D4;
+    --cuaternario: #F2FAE1;
+    --oscuro: #37342B;
+    --oscuro_input: #4d4d4d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    color: var(--oscuro);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.2rem;
+}
+
+.fondo-inicio {
+    background: url("/static/imagenes/fondo1.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.fondo-dashboard{
+    background: url("/static/imagenes/dashboard6.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.fondo-libros{
+    background: url("/static/imagenes/fondo-libros.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+header {
+    background-color: var(--oscuro);
+    display: flex;
+    align-items: center;
+    padding: 20px 40px;
+    height: 100px;
+    gap: 30px;
+}
+
+header img {
+    height: 70px;
+    cursor: pointer;
+}
+
+header .search-bar {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 16px;
+}
+
+header .search-bar input[type="text"] {
+    flex: 1;
+    padding: 12px 20px;
+    height: 50px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--oscuro_input);
+    color: white;
+    font-size: 1.3rem;
+}
+
+header .search-bar button {
+    padding: 12px 20px;
+    height: 50px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--secundario);
+    color: var(--oscuro);
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+footer {
+    background-color: var(--oscuro);
+    height: 100px;
+}
+
+main {
+    flex-grow: 1;
+    padding: 30px;
+}
+
+/* Botones */
+button, a.button {
+    display: inline-block;
+    background-color: var(--secundario);
+    color: var(--oscuro);
+    padding: 18px 32px;
+    margin: 15px 0;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+}
+
+button:hover, a.button:hover {
+    background-color: var(--terciario);
+}
+
+/* Contenedor general */
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+
+
+
+

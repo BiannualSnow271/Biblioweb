@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Iniciar sesión o Registrarse{% endblock %}
+
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-tabs">
+      <button id="btnLogin" class="tab active">Login</button>
+      <button id="btnRegister" class="tab">Registro</button>
+    </div>
+
+    <form method="post" class="login-form">
+      {% csrf_token %}
+      <input type="hidden" name="action" id="formAction" value="login">
+
+      <input type="text" name="username" placeholder="Usuario" required>
+
+      <div id="emailField" style="display: none;">
+        <input type="email" name="email" placeholder="Correo electrónico">
+      </div>
+
+      <input type="password" name="password" placeholder="Contraseña" required>
+
+      <button type="submit" class="btn" id="submitBtn">Iniciar sesión</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const btnLogin = document.getElementById('btnLogin');
+  const btnRegister = document.getElementById('btnRegister');
+  const formAction = document.getElementById('formAction');
+  const emailField = document.getElementById('emailField');
+  const submitBtn = document.getElementById('submitBtn');
+
+  btnLogin.addEventListener('click', () => {
+    btnLogin.classList.add('active');
+    btnRegister.classList.remove('active');
+    emailField.style.display = 'none';
+    formAction.value = 'login';
+    submitBtn.textContent = 'Iniciar sesión';
+  });
+
+  btnRegister.addEventListener('click', () => {
+    btnRegister.classList.add('active');
+    btnLogin.classList.remove('active');
+    emailField.style.display = 'block';
+    formAction.value = 'register';
+    submitBtn.textContent = 'Registrarse';
+  });
+</script>
+{% endblock %}
+

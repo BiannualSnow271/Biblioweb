@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{%load static%}
+
+{% load render_estrellas %}
+
+{% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/detallelibro.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="container mt-5 detalle-libro">
+    <svg style="display: none;">
+        <symbol id="icono-estrella" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 17.27L18.18 21L16.54 13.97L22 9.24
+                    L14.81 8.63L12 2L9.19 8.63L2 9.24
+                    L7.45 13.97L5.82 21z"/>
+        </symbol>
+    </svg>
+
+
+
+    <!-- Cabecera: Imagen + Info -->
+    <div class="detalle-header">
+        <div class="detalle-portada">
+            <img src="{{ libro.foto_perfil.url }}" alt="Portada del libro">
+        </div>
+
+        <div class="detalle-contenido">
+            <h2>{{ libro.titulo }}</h2>
+            <p><strong>Autor:</strong> {{ libro.autor }}</p>
+            <p><strong>Género:</strong> {{ libro.genero }}</p>
+            <p><strong>Valoración media:</strong> 
+                <div class="valoracion-media estrellas-valoracion">
+                    <div class="estrellas promedio">
+                        {% render_estrellas promedio libro.id %}
+                        <span>({{ promedio|floatformat:1 }}/5)</span>
+                    </div>
+                </div>
+            </p>
+        </div>
+    </div>
+
+    <!-- Descripción -->
+    <div class="mt-4">
+        <h4>Descripción</h4>
+        <p>{{ libro.resumen }}</p>
+    </div>
+
+    <!-- Valoración -->
+    <div class="valoracion-section mt-5">
+        <h4>Valorar este libro</h4>
+
+        <form method="POST" class="valoracion-form">
+            {% csrf_token %}
+
+            <div class="estrellas interactiva" id="rating-stars" title="Haz clic para valorar">
+                {% for i in "12345" %}
+                <span class="estrella-svg" data-index="{{ forloop.counter }}">
+                    <svg class="estrella-fondo"><use href="#icono-estrella"></use></svg>
+                    <div class="estrella-relleno">
+                    <svg><use href="#icono-estrella"></use></svg>
+                    </div>
+                </span>
+                {% endfor %}
+            </div>
+
+            <input type="hidden" name="puntuacion" id="puntuacion" value="{{ valoracion_usuario.puntuacion|default_if_none:'0' }}">
+
+            <textarea name="comentario" placeholder="Escribe un comentario (opcional)">{{ valoracion_usuario.comentario|default_if_none:"" }}</textarea>
+
+
+            <button type="submit" class="btn mt-2">Enviar valoración</button>
+        </form>
+    </div>
+
+    <!-- Valoraciones previas -->
+    <div class="valoraciones-existentes mt-5">
+        <h4>Valoraciones de otros lectores</h4>
+
+        {% if valoraciones %}
+            {% for valoracion in valoraciones %}
+                <div class="valoracion-item">
+                    <div class="valoracion-cabecera">
+                        <strong>{{ valoracion.usuario.username }}</strong> valoró:
+                    </div>
+                    <div class="estrellas promedio">
+                        {% render_estrellas valoracion.puntuacion valoracion.id %}
+                        <span>({{ valoracion.puntuacion|floatformat:1 }}/5)</span>
+                    </div>
+                    {% if valoracion.comentario %}
+                        <p class="valoracion-comentario mt-2">{{ valoracion.comentario }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">Aún no hay valoraciones para este libro.</p>
+        {% endif %}
+    </div>
+
+
+</main>
+
+<script>
+    const valoracionInteractiva = document.querySelector('.estrellas.interactiva');
+    const estrellas = valoracionInteractiva.querySelectorAll('.estrella-svg');
+    const inputPuntuacion = document.getElementById('puntuacion');
+
+    let puntuacionSeleccionada = 0;
+
+    // Si ya hay puntuación guardada al cargar la página, mostrarla
+    const puntuacionGuardada = parseFloat(inputPuntuacion.value);
+    if (!isNaN(puntuacionGuardada) && puntuacionGuardada > 0) {
+        puntuacionSeleccionada = puntuacionGuardada;
+        actualizarRellenoDesdePuntuacion(puntuacionGuardada);
+    }
+
+    valoracionInteractiva.addEventListener('mousemove', (e) => {
+    actualizarRelleno(e.clientX); // Siempre actualizar la vista previa al mover el ratón
+    });
+
+    valoracionInteractiva.addEventListener('mouseleave', () => {
+        if (puntuacionSeleccionada) {
+            // Mostrar la puntuación seleccionada cuando el ratón salga
+            actualizarRellenoDesdePuntuacion(puntuacionSeleccionada);
+        } else {
+            // Si no hay selección, no mostrar estrellas rellenas
+            estrellas.forEach(estrella => {
+                const relleno = estrella.querySelector('.estrella-relleno');
+                relleno.style.width = '0%';
+            });
+        }
+    });
+
+
+    valoracionInteractiva.addEventListener('click', (e) => {
+        estrellas.forEach((estrella, index) => {
+            const rect = estrella.getBoundingClientRect();
+            if (e.clientX >= rect.left && e.clientX <= rect.right) {
+                const offsetX = e.clientX - rect.left;
+                const porcentaje = offsetX / rect.width;
+                const puntuacion = index + porcentaje + 1e-6; // pequeñísimo margen
+                puntuacionSeleccionada = Math.round(puntuacion * 10) / 10; // redondea a 1 decimal
+
+                inputPuntuacion.value = puntuacionSeleccionada;
+                actualizarRellenoDesdePuntuacion(puntuacionSeleccionada);
+            }
+        });
+    });
+
+    function actualizarRelleno(x) {
+        estrellas.forEach((estrella) => {
+            const relleno = estrella.querySelector('.estrella-relleno');
+            const rect = estrella.getBoundingClientRect();
+            const offsetX = x - rect.left;
+
+            if (offsetX <= 0) {
+                relleno.style.width = '0%';
+            } else if (offsetX >= rect.width) {
+                relleno.style.width = '100%';
+            } else {
+                const porcentaje = (offsetX / rect.width) * 100;
+                relleno.style.width = `${porcentaje}%`;
+            }
+        });
+    }
+
+    function actualizarRellenoDesdePuntuacion(puntuacion) {
+        estrellas.forEach((estrella, index) => {
+            const relleno = estrella.querySelector('.estrella-relleno');
+            const diferencia = puntuacion - index;
+
+            if (diferencia >= 1) {
+                relleno.style.width = '100%';
+            } else if (diferencia > 0) {
+                relleno.style.width = `${diferencia * 100}%`;
+            } else {
+                relleno.style.width = '0%';
+            }
+        });
+    }
+
+</script>
+
+
+
+
+
+
+
+{% endblock %}

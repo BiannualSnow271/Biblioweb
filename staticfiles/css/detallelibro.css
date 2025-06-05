@@ -1,0 +1,262 @@
+
+.detalle-libro {
+    background-color: var(--cuaternario);
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    color: var(--oscuro);
+    margin-bottom: 50px;
+}
+
+.detalle-libro .detalle-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.detalle-libro .detalle-portada {
+    flex: 1 1 300px;
+    max-width: 300px;
+}
+
+.detalle-libro .detalle-portada img {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.detalle-libro .detalle-contenido {
+    flex: 2 1 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detalle-libro .detalle-contenido h2 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+    color: var(--oscuro);
+}
+
+.detalle-libro .detalle-contenido p {
+    font-size: 1.2rem;
+    color: var(--oscuro_input);
+    line-height: 1.6;
+}
+
+
+
+.valoracion-form textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-size: 1.1rem;
+    background-color: var(--oscuro_input);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.valoracion-form .btn {
+    background-color: var(--secundario);
+    color: var(--oscuro);
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.2rem;
+}
+
+.valoracion-form .btn:hover {
+    background-color: var(--primario);
+}
+
+/* Valoraciones que ya estan hechas */
+
+
+.valoraciones-existentes {
+    margin-top: 40px;
+}
+
+.valoraciones-existentes h4 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--oscuro);
+}
+
+.valoracion-item {
+    background-color: var(--terciario); 
+    border-radius: 10px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    color: var(--oscuro); 
+}
+
+.valoracion-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+
+.valoracion-numero {
+    font-size: 0.9rem;
+    margin-left: 6px;
+    color: var(--oscuro_input);
+}
+
+.valoracion-comentario {
+    font-style: italic;
+    margin-top: 8px;
+    color: var(--oscuro_input);
+}
+
+
+
+@media (max-width: 768px) {
+    .detalle-libro .detalle-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .detalle-libro .detalle-contenido {
+        align-items: center;
+    }
+
+    .valoracion-stars {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .valoracion-form textarea {
+        width: 100%;
+    }
+}
+
+.icono-estrella {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    vertical-align: middle;
+    color: gold;
+}
+
+.estrella-vacia {
+    color: #ccc;
+}
+
+.estrellas {
+    display: inline-flex;
+    gap: 4px;
+    vertical-align: middle;
+}
+
+.estrella-svg {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.estrella-svg svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+.estrella-fondo {
+  color: #ccc;
+  position: relative;
+  z-index: 0;
+}
+
+.estrella-relleno {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%; /* empieza vacía */
+  height: 28px;
+  overflow: hidden; /* clave para el recorte */
+  color: gold;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.estrella-relleno svg {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: block;
+  left: 0;
+  top: 0;
+}
+
+
+/* Mantén todo lo que ya tienes hasta aquí */
+
+/* --- Estrellas para valoración interactiva --- */
+
+
+.interactiva {
+    padding-bottom: 15px;
+}
+
+.valoracion-interactiva {
+    font-family: Arial, sans-serif; 
+    font-size: 2rem; 
+    line-height: 1;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    width: auto;  
+    height: 2.2rem; 
+    margin-bottom: 20px; /* un poco más de espacio abajo */
+}
+
+.estrella-parcial {
+    position: relative;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    margin-right: 4px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.estrella-parcial .estrella-fondo {
+    color: #ccc;
+    position: relative;
+    z-index: 0;
+    pointer-events: none;
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+.estrella-parcial .estrella-llena {
+    position: absolute;
+    top: 0;
+    right: 0; /* Rellenar de derecha a izquierda */
+    height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    color: gold;
+    z-index: 1;
+    width: 0%; /* Se actualiza con JS */
+    pointer-events: none;
+    transform-origin: right; /* Origen del relleno a la derecha */
+    transition: width 0.15s ease;
+}
+
+p {
+    margin-bottom: 0;
+}
