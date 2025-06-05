@@ -334,11 +334,12 @@ def gestionar_participantes(request, foro_id):
 
 
 
-@login_required
 def detalle_libro(request, libro_id):
+    usuario = None
     libro = get_object_or_404(Libro, pk=libro_id)
     valoraciones = Valoracion.objects.filter(libro=libro).order_by('-fecha')
     promedio = valoraciones.aggregate(Avg('puntuacion'))['puntuacion__avg'] or 0
+    valoracion_usuario = None
 
     # Calcular porcentaje para cada estrella (1 a 5)
     estrellas = []
@@ -350,39 +351,44 @@ def detalle_libro(request, libro_id):
             estrellas.append(round(diff * 100))  # Parcial proporcional
         else:
             estrellas.append(0)  # Vacía
+    
+    if request.user.is_authenticated:
 
-    valoracion_usuario = Valoracion.objects.filter(libro=libro, usuario=request.user).first()
+        usuario = request.user
 
-    if request.method == 'POST':
-        try:
-            puntuacion = float(request.POST.get('puntuacion', 0))
-            if puntuacion < 0: puntuacion = 0
-            if puntuacion > 5: puntuacion = 5
-        except (ValueError, TypeError):
-            puntuacion = 0
+        valoracion_usuario = Valoracion.objects.filter(libro=libro, usuario=request.user).first()
 
-        comentario = request.POST.get('comentario', '').strip()
+        if request.method == 'POST':
+            try:
+                puntuacion = float(request.POST.get('puntuacion', 0))
+                if puntuacion < 0: puntuacion = 0
+                if puntuacion > 5: puntuacion = 5
+            except (ValueError, TypeError):
+                puntuacion = 0
 
-        if valoracion_usuario:
-            valoracion_usuario.puntuacion = puntuacion
-            valoracion_usuario.comentario = comentario
-            valoracion_usuario.fecha = timezone.now()
-            valoracion_usuario.save()
-        else:
-            Valoracion.objects.create(
-                puntuacion=puntuacion,
-                comentario=comentario,
-                usuario=request.user,
-                libro=libro,
-                fecha=timezone.now()
-            )
+            comentario = request.POST.get('comentario', '').strip()
 
-        return redirect('dashboard')
+            if valoracion_usuario:
+                valoracion_usuario.puntuacion = puntuacion
+                valoracion_usuario.comentario = comentario
+                valoracion_usuario.fecha = timezone.now()
+                valoracion_usuario.save()
+            else:
+                Valoracion.objects.create(
+                    puntuacion=puntuacion,
+                    comentario=comentario,
+                    usuario=request.user,
+                    libro=libro,
+                    fecha=timezone.now()
+                )
+
+            return redirect('dashboard')
 
     return render(request, 'detalle_libro.html', {
         'libro': libro,
         'valoraciones': valoraciones,
         'promedio': promedio,
         'estrellas': estrellas,
-        'valoracion_usuario': valoracion_usuario,  # <- Añadido
+        'valoracion_usuario': valoracion_usuario,  
+        'user' : usuario,
     })

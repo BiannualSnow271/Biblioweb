@@ -1,9 +1,0 @@
-Create .env file and put in there the following things with your information. Database used is postgreSQL but it can be changed in settings
-
-DEBUG=
-SECRET_KEY=
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_HOST=
-DB_PORT=

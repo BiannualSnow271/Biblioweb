@@ -49,6 +49,7 @@
     </div>
 
     <!-- Valoración -->
+    {% if user %}
     <div class="valoracion-section mt-5">
         <h4>Valorar este libro</h4>
 
@@ -74,6 +75,7 @@
             <button type="submit" class="btn mt-2">Enviar valoración</button>
         </form>
     </div>
+    {% endif %}
 
     <!-- Valoraciones previas -->
     <div class="valoraciones-existentes mt-5">
